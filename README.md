@@ -20,6 +20,7 @@ It currently only supports handler UpdateOpenPitrixEtcd.
 #### Local
 
 ```$xslt
+$ govendor sync
 $ export WATCHER_HANDLER=UpdateOpenPitrixEtcd \
   WATCHER_WATCHED_FILE=./test/global_config.yaml \
   WATCHER_DURATION=10 \
@@ -29,7 +30,7 @@ $ export WATCHER_HANDLER=UpdateOpenPitrixEtcd \
   IGNORE_KEYS='{"runtime": true, "cluster": {"registry_mirror": true}}'
 
 $ cd watcher
-$ go run cmd/watcher/main.go
+$ go run cmd/watch/main.go
 ```
 
 #### Docker
