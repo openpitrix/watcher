@@ -1,0 +1,24 @@
+services:
+- docker
+language: go
+go:
+- '1.11.4'
+go_import_path: openpitrix.io/watcher
+before_install:
+- go get -u -v github.com/kardianos/govendor
+install:
+- govendor sync
+- docker run  -it -d -p 2379:2379 -p 2380:2380 --name etcd quay.io/coreos/etcd:v3.2.18 /usr/local/bin/etcd --data-dir=/etcd-data --name node1 --initial-advertise-peer-urls http://127.0.0.1:2380 --listen-peer-urls http://0.0.0.0:2380 --advertise-client-urls http://127.0.0.1:2379 --listen-client-urls http://0.0.0.0:2379 --initial-cluster node1=http://127.0.0.1:2380
+script:
+- make test
+deploy:
+- provider: script
+  script: make build-push-image-latest
+  on:
+    branch: master
+    repo: openpitrix/watcher
+- provider: script
+  script: make build-push-image-$TRAVIS_TAG
+  on:
+    tags: true
+    repo: openpitrix/watcher
