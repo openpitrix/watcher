@@ -14,11 +14,13 @@ script:
 deploy:
 - provider: script
   script: make build-push-image-latest
+  skip_cleanup: true
   on:
     branch: master
     repo: openpitrix/watcher
 - provider: script
   script: make build-push-image-$TRAVIS_TAG
+  skip_cleanup: true
   on:
     tags: true
     repo: openpitrix/watcher

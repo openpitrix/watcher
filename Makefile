@@ -2,25 +2,27 @@
 # Use of this source code is governed by a Apache license
 # that can be found in the LICENSE file.
 
-TARG.Name:=watcher
-TRAG.Gopkg:=openpitrix.io/$(TRAG.Name)
+
+login-dockerhub:
+	echo "$(DOCKER_PASSWORD)" | docker login -u "$(DOCKER_USERNAME)" --password-stdin
 
 build-image-%: ## build docker image
 	@if [ "$*" = "latest" ];then \
-	docker build -t $(TRAG.Gopkg):latest .; \
+	docker build -t openpitrix/watcher:latest .; \
 	elif [ "`echo "$*" | grep -E "^v[0-9]+\.[0-9]+\.[0-9]+"`" != "" ];then \
-	docker build -t $(TRAG.Gopkg):$* .; \
+	docker build -t openpitrix/watcher:$* .; \
 	fi
 
 push-image-%: ## push docker image
 	@if [ "$*" = "latest" ];then \
-	docker push $(TRAG.Gopkg):latest; \
+	docker push openpitrix/watcher:latest; \
 	elif [ "`echo "$*" | grep -E "^v[0-9]+\.[0-9]+\.[0-9]+"`" != "" ];then \
-	docker push $(TRAG.Gopkg):$*; \
+	docker push openpitrix/watcher:$*; \
 	fi
 
 build-push-image-%: ## build and push docker image
 	make build-image-$*
+	make login-dockerhub
 	make push-image-$*
 
 .PHONY: test
